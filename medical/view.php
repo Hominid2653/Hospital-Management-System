@@ -1,10 +1,11 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../config/paths.php';
 require_once '../includes/leave_calculator.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
+    header("Location: " . url('login.php'));
     exit();
 }
 
@@ -19,7 +20,7 @@ try {
     $worker = $stmt->fetch();
 
     if (!$worker) {
-        header("Location: ../workers/search.php");
+        header("Location: " . url('workers/search.php'));
         exit();
     }
 
@@ -147,420 +148,352 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Medical History - Sian Roses</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo url('assets/css/style.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-    .styled-select option.low-stock {
-        color: #e67e22;
-        font-weight: 500;
-    }
-    .styled-select option:disabled {
-        color: #999;
-    }
-    .styled-select option:checked {
-        background-color: #27ae60 !important;
-        color: white !important;
-    }
-    .payment-status {
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-weight: 500;
-    }
+        .content-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
 
-    .payment-status.full_pay {
-        background-color: #e3fcef;
-        color: #27ae60;
-    }
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 2rem;
+        }
 
-    .payment-status.half_pay {
-        background-color: #fef5e9;
-        color: #e67e22;
-    }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-    .payment-status.no_pay {
-        background-color: #fee7e7;
-        color: #e74c3c;
-    }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 2.5rem;
+        }
 
-    .leave-status {
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-weight: 500;
-    }
+        .profile-name {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
 
-    .leave-status.pending {
-        background-color: #fef5e9;
-        color: #e67e22;
-    }
+        .profile-role {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
 
-    .leave-status.approved {
-        background-color: #e3fcef;
-        color: #27ae60;
-    }
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
 
-    .leave-status.rejected {
-        background-color: #fee7e7;
-        color: #e74c3c;
-    }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-primary);
+        }
 
-    .recommendation-details {
-        margin-top: 1rem;
-        padding: 1rem;
-        background: #f8f9fa;
-        border-radius: 8px;
-        border-left: 4px solid #3498db;
-    }
+        .info-item i {
+            width: 20px;
+            color: var(--primary);
+        }
 
-    .classification {
-        margin-top: 0.5rem;
-        color: #666;
-    }
+        .medical-history {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
 
-    .classification .badge {
-        background-color: #e3f2fd;
-        color: #1976d2;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.9em;
-    }
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .history-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .visit-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .visit-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .visit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .visit-date {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .visit-type {
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .visit-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .detail-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: var(--text-primary);
+        }
+
+        .prescriptions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .prescription-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            background: var(--surface);
+            border-radius: 6px;
+        }
+
+        .leave-recommendation {
+            grid-column: 1 / -1;
+            background: var(--secondary-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+        }
+
+        .leave-label {
+            font-size: 0.85rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            margin-left: auto;
+        }
+
+        .leave-label.full_pay {
+            background: #4caf50;
+            color: white;
+        }
+
+        .leave-label.half_pay {
+            background: #ff9800;
+            color: white;
+        }
+
+        .leave-label.no_pay {
+            background: #f44336;
+            color: white;
+        }
+
+        .leave-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .leave-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .leave-info span:first-child {
+            min-width: 80px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .leave-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .leave-status.approved {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .leave-status.pending {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .leave-status.rejected {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .btn-action {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-back {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-back:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
     </style>
 </head>
 <body>
     <div class="layout">
-        <?php 
-        $base_url = '../'; // Set base URL for sidebar links
-        include '../includes/sidebar.php'; 
-        ?>
+        <?php include '../includes/sidebar.php'; ?>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <header class="top-bar">
-                <div class="welcome-message">
-                    <h2><?php echo htmlspecialchars($worker['name']); ?>'s Medical History</h2>
-                    <p>Payroll Number: <?php echo htmlspecialchars($worker['payroll_number']); ?> | 
-                       Department: <?php echo htmlspecialchars($worker['department']); ?></p>
+            <div class="section-header">
+                <div>
+                    <h1>Medical History</h1>
+                    <p>View and manage medical records</p>
                 </div>
-            </header>
-
-            <div class="content-wrapper">
-                <?php if ($error): ?>
-                    <div class="error">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <?php echo htmlspecialchars($error); ?>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (isset($_GET['success'])): ?>
-                    <div class="success">
-                        <i class="fas fa-check-circle"></i>
-                        Medical record added successfully
-                    </div>
-                <?php endif; ?>
-
-                <!-- Add New Record Section -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-plus-circle"></i> Add New Medical Record</h3>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="" class="styled-form">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="visit_date">
-                                        <i class="fas fa-calendar"></i>
-                                        Visit Date
-                                    </label>
-                                    <input type="date" id="visit_date" name="visit_date" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="diagnosis">
-                                    <i class="fas fa-stethoscope"></i>
-                                    Diagnosis
-                                </label>
-                                <textarea id="diagnosis" name="diagnosis" rows="3" required></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="disease_classification">
-                                    <i class="fas fa-tag"></i>
-                                    Disease Classification
-                                </label>
-                                <?php
-                                // Fetch disease classifications
-                                $stmt = $pdo->prepare("SELECT id, name FROM disease_classifications ORDER BY name ASC");
-                                $stmt->execute();
-                                $classifications = $stmt->fetchAll();
-                                ?>
-                                <select name="disease_classification" id="disease_classification" required class="styled-select">
-                                    <option value="">Select Classification</option>
-                                    <?php foreach ($classifications as $classification): ?>
-                                        <option value="<?php echo $classification['id']; ?>">
-                                            <?php echo htmlspecialchars($classification['name']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="remarks">
-                                    <i class="fas fa-comment-medical"></i>
-                                    Remarks
-                                </label>
-                                <textarea id="remarks" name="remarks" rows="2"></textarea>
-                            </div>
-
-                            <div class="prescriptions-section">
-                                <label>
-                                    <i class="fas fa-pills"></i>
-                                    Prescriptions
-                                </label>
-                                <div id="prescriptions-container">
-                                    <div class="prescription-row">
-                                        <select name="prescriptions[0][drug_name]" class="styled-select" required>
-                                            <option value="">Select a drug...</option>
-                                            <?php foreach ($available_drugs as $drug): ?>
-                                                <option value="<?php echo htmlspecialchars($drug['name']); ?>"
-                                                        <?php echo $drug['status'] === 'low_stock' ? 'class="low-stock"' : ''; ?>>
-                                                    <?php echo htmlspecialchars($drug['name']); ?>
-                                                    <?php echo $drug['status'] === 'low_stock' ? ' (Low Stock)' : ''; ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                        <input type="text" name="prescriptions[0][dosage]" 
-                                               placeholder="Dosage" required>
-                                        <button type="button" class="btn-icon" onclick="addPrescriptionRow()">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="leave-recommendation-section">
-                                <label>
-                                    <i class="fas fa-bed"></i>
-                                    Leave Recommendation
-                                </label>
-                                <div class="recommendation-form">
-                                    <div class="form-row">
-                                        <div class="form-group half">
-                                            <label for="leave_days">Number of Days</label>
-                                            <input type="number" id="leave_days" name="leave_days" 
-                                                   min="1" max="113" placeholder="Enter number of days">
-                                        </div>
-                                        <div class="form-group half">
-                                            <label for="start_date">Start Date</label>
-                                            <input type="date" id="start_date" name="start_date" 
-                                                   value="<?php echo date('Y-m-d'); ?>">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="recommendation_reason">Reason for Leave</label>
-                                        <textarea id="recommendation_reason" name="recommendation_reason" 
-                                                  placeholder="Explain why leave is recommended"
-                                                  rows="3"></textarea>
-                                    </div>
-                                </div>
-                                <div class="info-box">
-                                    <i class="fas fa-info-circle"></i>
-                                    <p>Leave Entitlement Rules:
-                                       <ul>
-                                           <li>Total annual leave: 113 days</li>
-                                           <li>First 55 days: Full pay</li>
-                                           <li>Days 56-113: Half pay</li>
-                                           <li>Beyond 113 days: No pay</li>
-                                       </ul>
-                                    </p>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn-primary">
-                                <i class="fas fa-save"></i>
-                                Save Medical Record
-                            </button>
-                        </form>
-                    </div>
+                <div class="header-actions">
+                    <a href="../workers/view.php?id=<?php echo $worker_id; ?>" class="btn-action btn-back">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Profile
+                    </a>
+                    <a href="new.php?id=<?php echo $worker_id; ?>" class="btn-action">
+                        <i class="fas fa-plus-circle"></i>
+                        New Visit
+                    </a>
                 </div>
+            </div>
 
-                <!-- Medical History Section -->
-                <div class="card mt-4">
-                    <div class="card-header">
-                        <h3><i class="fas fa-history"></i> Medical History</h3>
+            <div class="content-grid">
+                <!-- Profile Card -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <h2 class="profile-name"><?php echo htmlspecialchars($worker['name']); ?></h2>
+                        <p class="profile-role"><?php echo htmlspecialchars($worker['role']); ?></p>
                     </div>
-                    <div class="card-body">
-                        <?php if (empty($medical_records)): ?>
-                            <div class="no-records">
-                                <i class="fas fa-file-medical fa-3x"></i>
-                                <p>No medical records found</p>
-                            </div>
-                        <?php else: ?>
-                            <div class="timeline">
-                                <?php foreach ($medical_records as $record): ?>
-                                    <div class="timeline-item">
-                                        <div class="timeline-date">
-                                            <i class="fas fa-calendar"></i>
-                                            <?php echo date('M d, Y', strtotime($record['visit_date'])); ?>
-                                        </div>
-                                        <div class="timeline-content">
-                                            <div class="diagnosis-details">
-                                                <h4>Diagnosis</h4>
-                                                <p><?php echo nl2br(htmlspecialchars($record['diagnosis'])); ?></p>
-                                                <?php if ($record['disease_classification']): ?>
-                                                    <p class="classification">
-                                                        <i class="fas fa-tag"></i>
-                                                        Classification: <span class="badge"><?php echo htmlspecialchars($record['disease_classification']); ?></span>
-                                                    </p>
-                                                <?php endif; ?>
-                                            </div>
-                                            
-                                            <?php if ($record['remarks']): ?>
-                                                <h4>Remarks</h4>
-                                                <p><?php echo nl2br(htmlspecialchars($record['remarks'])); ?></p>
-                                            <?php endif; ?>
 
-                                            <?php if ($record['prescriptions']): ?>
-                                                <h4>Prescriptions</h4>
-                                                <ul class="prescriptions-list">
-                                                    <?php foreach (explode('||', $record['prescriptions']) as $prescription): ?>
-                                                        <li><i class="fas fa-pills"></i> <?php echo htmlspecialchars($prescription); ?></li>
-                                                    <?php endforeach; ?>
-                                                </ul>
-                                            <?php endif; ?>
-
-                                            <?php if ($record['days_recommended']): ?>
-                                                <div class="recommendation-details">
-                                                    <h4><i class="fas fa-bed"></i> Leave Recommendation</h4>
-                                                    <p>Days Recommended: <?php echo htmlspecialchars($record['days_recommended']); ?></p>
-                                                    <p>Payment Status: 
-                                                        <span class="payment-status <?php echo $record['payment_recommendation']; ?>">
-                                                            <?php echo ucfirst(str_replace('_', ' ', $record['payment_recommendation'])); ?>
-                                                        </span>
-                                                    </p>
-                                                    <p>Period: <?php 
-                                                        echo date('M d, Y', strtotime($record['leave_start_date'])) . ' to ' . 
-                                                             date('M d, Y', strtotime($record['leave_end_date']));
-                                                    ?></p>
-                                                    <p>Reason: <?php echo nl2br(htmlspecialchars($record['recommendation_reason'])); ?></p>
-                                                    <p>Status: <span class="leave-status <?php echo $record['leave_status']; ?>">
-                                                        <?php echo ucfirst($record['leave_status']); ?>
-                                                    </span></p>
-                                                    
-                                                    <!-- Add leave summary -->
-                                                    <?php if (isset($record['used_days'])): ?>
-                                                    <div class="leave-summary">
-                                                        <h5>Leave Summary for <?php echo date('Y'); ?></h5>
-                                                        <ul>
-                                                            <li>Used: <?php echo $record['used_days']; ?> days</li>
-                                                            <li>Remaining: <?php echo $record['remaining_days']; ?> days</li>
-                                                            <li>Status: 
-                                                                <?php if ($record['used_days'] < 55): ?>
-                                                                    <span class="status-text">Within full pay period</span>
-                                                                <?php elseif ($record['used_days'] < 113): ?>
-                                                                    <span class="status-text">Within half pay period</span>
-                                                                <?php else: ?>
-                                                                    <span class="status-text">Exceeded annual entitlement</span>
-                                                                <?php endif; ?>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
+                    <div class="profile-info">
+                        <div class="info-item">
+                            <i class="fas fa-id-card"></i>
+                            <span><?php echo htmlspecialchars($worker['payroll_number']); ?></span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-building"></i>
+                            <span><?php echo htmlspecialchars($worker['department']); ?></span>
+                        </div>
+                        <?php if ($worker['phone']): ?>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <span><?php echo htmlspecialchars($worker['phone']); ?></span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ($worker['email']): ?>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <span><?php echo htmlspecialchars($worker['email']); ?></span>
+                        </div>
                         <?php endif; ?>
                     </div>
+                </div>
+
+                <!-- Medical History -->
+                <div class="medical-history">
+                    <?php if (empty($medical_records)): ?>
+                        <div class="no-records">
+                            <i class="fas fa-notes-medical"></i>
+                            <p>No medical records found</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($medical_records as $record): ?>
+                            <div class="visit-card">
+                                <!-- ... Rest of your existing visit card HTML ... -->
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </main>
     </div>
 
-    <script>
-    let prescriptionCount = 1;
-
-    function updateAvailableDrugs() {
-        // Get all selected drugs except the current one
-        const selectedDrugs = new Set();
-        const selects = document.querySelectorAll('#prescriptions-container select');
-        
-        selects.forEach(select => {
-            if (select.value) {
-                selectedDrugs.add(select.value);
-            }
-        });
-
-        // Update each select's options
-        selects.forEach(select => {
-            const currentValue = select.value;
-            const options = Array.from(select.options);
-            
-            options.forEach(option => {
-                // Skip the placeholder option
-                if (!option.value) return;
-                
-                // Disable if drug is selected in another row
-                if (selectedDrugs.has(option.value) && option.value !== currentValue) {
-                    option.disabled = true;
-                } else {
-                    option.disabled = false;
-                }
-
-                // Add selected class for highlighting
-                if (option.value === currentValue) {
-                    option.style.backgroundColor = '#27ae60';
-                    option.style.color = 'white';
-                } else {
-                    option.style.backgroundColor = '';
-                    option.style.color = '';
-                }
-            });
-        });
-    }
-
-    function addPrescriptionRow() {
-        const container = document.getElementById('prescriptions-container');
-        const newRow = document.createElement('div');
-        newRow.className = 'prescription-row';
-        
-        // Get the drug options from the first select element
-        const firstSelect = container.querySelector('select');
-        const options = Array.from(firstSelect.options)
-            .map(opt => {
-                const className = opt.className ? ` class="${opt.className}"` : '';
-                // Add disabled attribute if the option is already selected
-                const isDisabled = opt.value && document.querySelector(`select[name^="prescriptions"] option[value="${opt.value}"]:checked`);
-                const disabled = isDisabled ? ' disabled' : '';
-                return `<option value="${opt.value}"${className}${disabled}>${opt.innerHTML}</option>`;
-            })
-            .join('');
-        
-        newRow.innerHTML = `
-            <select name="prescriptions[${prescriptionCount}][drug_name]" class="styled-select" required 
-                    onchange="updateAvailableDrugs()">
-                ${options}
-            </select>
-            <input type="text" name="prescriptions[${prescriptionCount}][dosage]" 
-                   placeholder="Dosage" required>
-            <button type="button" class="btn-icon remove" onclick="removePrescriptionRow(this)">
-                <i class="fas fa-minus"></i>
-            </button>
-        `;
-        container.appendChild(newRow);
-        prescriptionCount++;
-    }
-
-    function removePrescriptionRow(button) {
-        button.parentElement.remove();
-        // Update available options after removing a row
-        updateAvailableDrugs();
-    }
-
-    // Add onchange handler to the first select
-    document.querySelector('select[name="prescriptions[0][drug_name]"]')
-        .addEventListener('change', updateAvailableDrugs);
-    </script>
+    <script src="../assets/js/menu.js"></script>
 </body>
 </html>

@@ -1,83 +1,63 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../config/paths.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
+    header("Location: " . url('login.php'));
     exit();
 }
 
-// Add base URL for sidebar navigation
-$base_url = '../';  // This is important for correct navigation paths
-
-// Get filter parameters
-$period = $_GET['period'] ?? 'month';
-$year = $_GET['year'] ?? date('Y');
-$month = $_GET['month'] ?? date('m');
-
-// Initialize statistics array
-$statistics = [];
-$error = null;
-
+// Fetch summary statistics
 try {
-    // Build the date condition based on period
-    $dateCondition = match($period) {
-        'month' => "AND YEAR(m.visit_date) = ? AND MONTH(m.visit_date) = ?",
-        'year' => "AND YEAR(m.visit_date) = ?",
-        'all' => "",
-    };
+    // Total workers
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM workers");
+    $total_workers = $stmt->fetch()['total'];
 
-    // Get disease classification statistics
-    $sql = "
+    // Total medical visits
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM medical_history");
+    $total_visits = $stmt->fetch()['total'];
+
+    // Total drugs
+    $stmt = $pdo->query("SELECT COUNT(*) as total FROM drugs");
+    $total_drugs = $stmt->fetch()['total'];
+
+    // Get disease type distribution
+    $stmt = $pdo->query("
         SELECT 
-            dc.name as classification,
-            COUNT(m.id) as consultation_count,
-            COUNT(DISTINCT m.payroll_number) as patient_count,
-            COUNT(DISTINCT DATE(m.visit_date)) as days_count,
-            (
-                SELECT COUNT(DISTINCT mh.payroll_number)
-                FROM medical_history mh
-                JOIN workers w ON mh.payroll_number = w.payroll_number
-                WHERE mh.disease_classification_id = dc.id
-                AND w.department LIKE '%Management%'
-                " . ($dateCondition ? $dateCondition : "") . "
-            ) as management_count,
-            (
-                SELECT COUNT(DISTINCT mh.payroll_number)
-                FROM medical_history mh
-                JOIN workers w ON mh.payroll_number = w.payroll_number
-                WHERE mh.disease_classification_id = dc.id
-                AND w.department NOT LIKE '%Management%'
-                " . ($dateCondition ? $dateCondition : "") . "
-            ) as worker_count
+            CASE 
+                WHEN diagnosis LIKE '%respiratory%' OR diagnosis LIKE '%breathing%' OR diagnosis LIKE '%lung%' 
+                    THEN 'Respiratory'
+                WHEN diagnosis LIKE '%muscle%' OR diagnosis LIKE '%joint%' OR diagnosis LIKE '%back%' OR diagnosis LIKE '%sprain%'
+                    THEN 'Musculoskeletal'
+                WHEN diagnosis LIKE '%skin%' OR diagnosis LIKE '%rash%' OR diagnosis LIKE '%dermatitis%'
+                    THEN 'Skin Conditions'
+                WHEN diagnosis LIKE '%headache%' OR diagnosis LIKE '%migraine%'
+                    THEN 'Headaches'
+                WHEN diagnosis LIKE '%fever%' OR diagnosis LIKE '%flu%' OR diagnosis LIKE '%cold%'
+                    THEN 'Fever & Flu'
+                ELSE 'Other'
+            END as category,
+            COUNT(*) as count
+        FROM medical_history
+        WHERE diagnosis IS NOT NULL
+        GROUP BY category
+        ORDER BY count DESC
+    ");
+    $disease_stats = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Recent visits
+    $stmt = $pdo->query("
+        SELECT m.*, w.name as worker_name
         FROM medical_history m
-        JOIN disease_classifications dc ON m.disease_classification_id = dc.id
-        WHERE 1=1 
-        " . ($dateCondition ? $dateCondition : "") . "
-        GROUP BY dc.id, dc.name
-        ORDER BY consultation_count DESC
-    ";
-
-    $stmt = $pdo->prepare($sql);
-    
-    // Bind parameters based on period
-    if ($period === 'month') {
-        $stmt->execute([$year, $month, $year, $month, $year, $month]);
-    } elseif ($period === 'year') {
-        $stmt->execute([$year, $year, $year]);
-    } else {
-        $stmt->execute();
-    }
-
-    $statistics = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // If no data found, add message
-    if (empty($statistics)) {
-        $error = "No data found for the selected period";
-    }
+        JOIN workers w ON m.payroll_number = w.payroll_number
+        ORDER BY visit_date DESC
+        LIMIT 5
+    ");
+    $recent_visits = $stmt->fetchAll();
 
 } catch (PDOException $e) {
-    $error = "Error generating report: " . $e->getMessage();
+    $error = "Database error: " . $e->getMessage();
 }
 ?>
 
@@ -86,398 +66,403 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disease Classification Reports - Sian Roses</title>
-    <link rel="stylesheet" href="<?php echo $base_url; ?>assets/css/style.css">
+    <title>Reports - Sian Roses</title>
+    <link rel="stylesheet" href="<?php echo url('assets/css/style.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .main-content {
+            padding: 2rem;
+            background: none;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header-left h1 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            margin: 0;
+        }
+
+        .section-header-left p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0 0 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .report-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .report-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .report-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-report {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-report.secondary {
+            background: var(--secondary);
+        }
+
+        .btn-report:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .recent-visits {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        .recent-visits h2 {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin: 0 0 1rem 0;
+        }
+
+        .visits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .visit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .visit-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .visit-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .visit-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .visit-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 250px;
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-header h3 {
+            color: var(--primary);
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        .period-select {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: white;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
         <?php include '../includes/sidebar.php'; ?>
 
         <main class="main-content">
-            <header class="top-bar">
-                <div class="welcome-message">
-                    <h2>Medical Reports</h2>
-                    <p>View and analyze medical statistics</p>
+            <div class="section-header">
+                <div class="section-header-left">
+                    <h1>Reports Dashboard</h1>
+                    <p>View and generate medical reports</p>
                 </div>
-                <div class="action-buttons">
-                    <a href="export_report.php?period=<?php echo htmlspecialchars($period); ?>&year=<?php echo htmlspecialchars($year); ?>&month=<?php echo htmlspecialchars($month); ?>" 
-                       class="btn-export" title="Export Report">
-                        <i class="fas fa-file-csv"></i>
-                        Export Report
-                    </a>
-                </div>
-            </header>
+            </div>
 
-            <div class="content-wrapper">
-                <!-- Filters -->
-                <div class="filters-section card">
-                    <form method="GET" class="filters-form">
-                        <div class="form-group">
-                            <label for="period">Time Period</label>
-                            <select name="period" id="period" class="styled-select" onchange="this.form.submit()">
-                                <option value="month" <?php echo $period === 'month' ? 'selected' : ''; ?>>Monthly</option>
-                                <option value="year" <?php echo $period === 'year' ? 'selected' : ''; ?>>Yearly</option>
-                                <option value="all" <?php echo $period === 'all' ? 'selected' : ''; ?>>All Time</option>
-                            </select>
-                        </div>
-
-                        <?php if ($period === 'month'): ?>
-                        <div class="form-group">
-                            <label for="month">Month</label>
-                            <select name="month" id="month" class="styled-select" onchange="this.form.submit()">
-                                <?php for ($i = 1; $i <= 12; $i++): ?>
-                                    <option value="<?php echo $i; ?>" <?php echo $month == $i ? 'selected' : ''; ?>>
-                                        <?php echo date('F', mktime(0, 0, 0, $i, 1)); ?>
-                                    </option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
-                        <?php endif; ?>
-
-                        <div class="form-group">
-                            <label for="year">Year</label>
-                            <select name="year" id="year" class="styled-select" onchange="this.form.submit()">
-                                <?php for ($i = date('Y'); $i >= 2020; $i--): ?>
-                                    <option value="<?php echo $i; ?>" <?php echo $year == $i ? 'selected' : ''; ?>>
-                                        <?php echo $i; ?>
-                                    </option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Add error handling in the display section -->
-                <?php if ($error): ?>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle"></i>
-                        <?php echo htmlspecialchars($error); ?>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
                     </div>
-                <?php else: ?>
-                    <!-- Statistics Cards -->
-                    <div class="stats-grid">
-                        <?php foreach ($statistics as $stat): ?>
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <h3><?php echo htmlspecialchars($stat['classification']); ?></h3>
-                            </div>
-                            <div class="stat-body">
-                                <div class="stat-item" title="Total number of medical visits for this condition">
-                                    <i class="fas fa-stethoscope"></i>
-                                    <div class="stat-details">
-                                        <span class="stat-number"><?php echo $stat['consultation_count']; ?></span>
-                                        <span class="stat-label">Total Visits</span>
-                                    </div>
-                                </div>
-                                <?php /* Comment out unique patients section
-                                <div class="stat-item" title="Number of different workers who reported this condition">
-                                    <i class="fas fa-users"></i>
-                                    <div class="stat-details">
-                                        <span class="stat-number"><?php echo $stat['patient_count']; ?></span>
-                                        <span class="stat-label">Different Workers Affected</span>
-                                    </div>
-                                </div>
-                                */ ?>
-                                <div class="stat-item">
-                                    <div class="worker-split" title="Breakdown by department">
-                                        <div>
-                                            <span class="stat-number"><?php echo $stat['management_count']; ?></span>
-                                            <span class="stat-label">Management Staff</span>
-                                        </div>
-                                        <div>
-                                            <span class="stat-number"><?php echo $stat['worker_count']; ?></span>
-                                            <span class="stat-label">Farm Workers</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
+                    <div class="stat-value"><?php echo $total_workers; ?></div>
+                    <div class="stat-label">Total Workers</div>
+                </div>
 
-                    <!-- Charts -->
-                    <?php if (!empty($statistics)): ?>
-                        <div class="charts-section">
-                            <!-- Pie Chart First -->
-                            <div class="card chart-container">
-                                <canvas id="diseasePieChart" style="height: 300px;"></canvas>
-                            </div>
-                            <!-- Bar Chart Second -->
-                            <div class="card chart-container">
-                                <canvas id="diseaseChart" style="height: 300px;"></canvas>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-                <?php endif; ?>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <div class="stat-value"><?php echo $total_visits; ?></div>
+                    <div class="stat-label">Medical Visits</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-pills"></i>
+                    </div>
+                    <div class="stat-value"><?php echo $total_drugs; ?></div>
+                    <div class="stat-label">Drugs in Inventory</div>
+                </div>
+            </div>
+
+            <div class="reports-grid">
+                <div class="report-card">
+                    <div class="report-header">
+                        <i class="fas fa-file-medical report-icon"></i>
+                        <h3 class="report-title">Medical History Report</h3>
+                    </div>
+                    <p>Generate comprehensive medical history reports for workers</p>
+                    <div class="report-actions">
+                        <a href="medical_history.php" class="btn-report">
+                            <i class="fas fa-eye"></i>
+                            View Report
+                        </a>
+                        <a href="medical_history.php?export=true" class="btn-report secondary">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </a>
+                    </div>
+                </div>
+
+                <div class="report-card">
+                    <div class="report-header">
+                        <i class="fas fa-pills report-icon"></i>
+                        <h3 class="report-title">Drug Usage Report</h3>
+                    </div>
+                    <p>Track and analyze drug consumption patterns</p>
+                    <div class="report-actions">
+                        <a href="drug_usage.php" class="btn-report">
+                            <i class="fas fa-eye"></i>
+                            View Report
+                        </a>
+                        <a href="drug_usage.php?export=true" class="btn-report secondary">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Disease Categories</h3>
+                    </div>
+                    <canvas id="departmentChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3>Monthly Visits</h3>
+                    </div>
+                    <canvas id="visitsChart"></canvas>
+                </div>
             </div>
         </main>
     </div>
 
+    <script src="<?php echo url('assets/js/menu.js'); ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-    // Update both charts' options
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom',
-                labels: {
-                    boxWidth: 12,
-                    padding: 20
-                }
-            },
-            title: {
-                display: true,
-                padding: {
-                    top: 10,
-                    bottom: 20
-                }
-            }
-        }
-    };
+        // Department Distribution Chart
+        const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+        const diseaseData = <?php echo json_encode(array_column($disease_stats, 'count')); ?>;
+        const diseaseLabels = <?php echo json_encode(array_column($disease_stats, 'category')); ?>;
 
-    // Change from Pie to Doughnut chart
-    const pieCtx = document.getElementById('diseasePieChart').getContext('2d');
-    new Chart(pieCtx, {
-        type: 'doughnut',  // Changed from 'pie' to 'doughnut'
-        data: {
-            labels: <?php echo json_encode(array_column($statistics, 'classification')); ?>,
-            datasets: [{
-                data: <?php echo json_encode(array_column($statistics, 'consultation_count')); ?>,
-                backgroundColor: [
-                    '#FF6384',
-                    '#36A2EB',
-                    '#FFCE56',
-                    '#4BC0C0',
-                    '#9966FF',
-                    '#FF9F40',
-                    '#FF6384',
-                    '#36A2EB'
-                ]
-            }]
-        },
-        options: {
-            ...chartOptions,
-            plugins: {
-                ...chartOptions.plugins,
-                title: {
-                    ...chartOptions.plugins.title,
-                    text: 'Distribution of Disease Cases'
-                }
+        new Chart(departmentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: diseaseLabels,
+                datasets: [{
+                    data: diseaseData,
+                    backgroundColor: [
+                        'rgba(231, 84, 128, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 206, 86, 0.8)',
+                        'rgba(75, 192, 192, 0.8)'
+                    ],
+                    borderWidth: 1
+                }]
             },
-            cutout: '60%'  // Added cutout percentage for doughnut
-        }
-    });
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            boxWidth: 8,
+                            padding: 10,
+                            font: {
+                                size: 10
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.raw || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = Math.round((value / total) * 100);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
-    // Bar Chart (now second)
-    const ctx = document.getElementById('diseaseChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: <?php echo json_encode(array_column($statistics, 'classification')); ?>,
-            datasets: [{
-                label: 'Total Visits',
-                data: <?php echo json_encode(array_column($statistics, 'consultation_count')); ?>,
-                backgroundColor: '#3498db',
-                borderColor: '#2980b9',
-                borderWidth: 1
-            }
-            <?php /* Comment out unique patients dataset
-            , {
-                label: 'Unique Patients',
-                data: <?php echo json_encode(array_column($statistics, 'patient_count')); ?>,
-                backgroundColor: '#2ecc71',
-                borderColor: '#27ae60',
-                borderWidth: 1
-            }
-            */ ?>
-            ]
-        },
-        options: {
-            ...chartOptions,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+        // Monthly Visits Chart
+        const visitsCtx = document.getElementById('visitsChart').getContext('2d');
+        new Chart(visitsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Medical Visits',
+                    data: [65, 59, 80, 81, 56, 55],
+                    backgroundColor: 'rgba(231, 84, 128, 0.8)',
+                    borderColor: 'rgba(231, 84, 128, 1)',
+                    borderWidth: 1
+                }]
             },
-            plugins: {
-                ...chartOptions.plugins,
-                title: {
-                    ...chartOptions.plugins.title,
-                    text: 'Disease Classification Statistics'
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
     </script>
-
-    <style>
-    .filters-section {
-        margin-bottom: 2rem;
-        padding: 1rem;
-    }
-
-    .filters-form {
-        display: flex;
-        gap: 1rem;
-        align-items: flex-end;
-    }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1rem;
-        margin-bottom: 2rem;
-    }
-
-    .stat-card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        padding: 1rem;
-    }
-
-    .stat-header h3 {
-        color: #2c3e50;
-        margin: 0 0 1rem 0;
-        font-size: 1.1rem;
-    }
-
-    .stat-item {
-        position: relative;
-    }
-
-    .stat-item:hover::after {
-        content: attr(title);
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        padding: 5px 10px;
-        background: #333;
-        color: white;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        white-space: nowrap;
-        z-index: 1000;
-    }
-
-    .stat-number {
-        font-size: 1.5rem;
-        font-weight: 500;
-        color: #2c3e50;
-    }
-
-    .stat-label {
-        font-size: 0.9rem;
-        color: #666;
-        display: block;
-        margin-top: 4px;
-    }
-
-    .worker-split {
-        display: flex;
-        gap: 2rem;
-    }
-
-    .charts-section {
-        margin-top: 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    @media (min-width: 1200px) {
-        .charts-section {
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-        
-        .chart-container {
-            flex: 1;
-            min-width: 45%;
-        }
-    }
-
-    .chart-container {
-        position: relative;
-        min-height: 350px;
-        height: auto;
-        padding: 1rem;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        width: 100%;
-    }
-
-    .alert {
-        padding: 1rem;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .alert-info {
-        background-color: #e3f2fd;
-        color: #1976d2;
-        border: 1px solid #bbdefb;
-    }
-
-    .alert i {
-        font-size: 1.2rem;
-    }
-
-    .mt-4 {
-        margin-top: 1.5rem;
-    }
-
-    /* Add a subtle info icon next to labels */
-    .stat-label-with-info {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .stat-label-with-info i {
-        color: #666;
-        font-size: 0.8rem;
-    }
-
-    .action-buttons {
-        display: flex;
-        gap: 1rem;
-        margin-left: auto;
-    }
-
-    .btn-export {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-        background-color: #27ae60;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-        font-size: 0.9rem;
-        transition: background-color 0.3s;
-        cursor: pointer;
-    }
-
-    .btn-export:hover {
-        background-color: #219a52;
-    }
-
-    .btn-export i {
-        font-size: 1rem;
-    }
-    </style>
-
-    <!-- Update JavaScript paths with base_url -->
-    <script src="<?php echo $base_url; ?>assets/js/menu.js"></script>
 </body>
 </html> 

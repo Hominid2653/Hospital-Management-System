@@ -1,13 +1,12 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../config/paths.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
+    header("Location: " . url('login.php'));
     exit();
 }
-
-$base_url = '../'; //  base URL for sidebar links
 ?>
 
 <!DOCTYPE html>
@@ -16,265 +15,311 @@ $base_url = '../'; //  base URL for sidebar links
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Search Workers - Sian Roses</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo url('assets/css/style.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .main-content {
+            padding: 2rem;
+            background: none;
+        }
+
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h1 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            margin: 0;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0 0 0;
+        }
+
+        .search-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(231, 84, 128, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-option {
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .filter-option i {
+            font-size: 1rem;
+        }
+
+        .filter-option:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-option.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .search-results {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item:hover {
+            background: rgba(231, 84, 128, 0.05);
+            transform: translateX(5px);
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .worker-name {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+        }
+
+        .worker-details {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-edit {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .no-results p {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
         <?php include '../includes/sidebar.php'; ?>
 
-        <!-- Main Content -->
         <main class="main-content">
-            <header class="top-bar">
-                <div class="welcome-message">
-                    <h2>Search Workers</h2>
-                    <p>Find and manage worker records</p>
-                </div>
-                <div class="action-buttons">
-                    <a href="export.php" class="btn-export">
-                        <i class="fas fa-download"></i>
-                        Export Records
-                    </a>
-                </div>
-            </header>
+            <div class="section-header">
+                <h1>Search Workers</h1>
+                <p>Search and find worker records quickly</p>
+            </div>
 
-            <div class="content-wrapper">
-                <div class="search-container">
-                    <div class="search-box">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" id="searchInput" placeholder="Enter payroll number or name...">
-                        <button onclick="searchWorker()" class="search-button">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                    <!-- Add Search History Section -->
-                    <div class="search-history">
-                        <div class="history-header">
-                            <h3><i class="fas fa-history"></i> Recent Searches</h3>
-                            <button onclick="clearSearchHistory()" class="btn-clear">
-                                <i class="fas fa-trash"></i> Clear History
-                            </button>
-                        </div>
-                        <div id="searchHistoryList" class="history-list">
-                            <!-- Search history items -->
-                        </div>
-                    </div>
+            <div class="search-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" 
+                           id="searchInput" 
+                           placeholder="Search by payroll number, name, or department..." 
+                           oninput="searchWorkers(this.value)">
                 </div>
-                <div id="searchResults" class="search-results"></div>
+
+                <div class="search-filters">
+                    <button class="filter-option active" onclick="setFilter('all')">
+                        <i class="fas fa-users"></i>
+                        All Workers
+                    </button>
+                    <button class="filter-option" onclick="setFilter('management')">
+                        <i class="fas fa-user-tie"></i>
+                        Management
+                    </button>
+                    <button class="filter-option" onclick="setFilter('farm')">
+                        <i class="fas fa-tractor"></i>
+                        Farm Workers
+                    </button>
+                </div>
+            </div>
+
+            <div id="searchResults" class="search-results">
+                <div class="no-results">
+                    <i class="fas fa-search"></i>
+                    <p>Start typing to search for workers</p>
+                </div>
             </div>
         </main>
     </div>
 
-    <script src="../assets/js/menu.js"></script>
-    <script src="../assets/js/search.js"></script>
+    <script src="<?php echo url('assets/js/menu.js'); ?>"></script>
     <script>
-    let searchTimeout;
+        let currentFilter = 'all';
 
-    function searchWorker() {
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
-        const searchTerm = searchInput.value.trim();
-
-        // Clear previous timeout
-        clearTimeout(searchTimeout);
-
-        // Clear results if search is empty
-        if (searchTerm === '') {
-            searchResults.innerHTML = '';
-            return;
+        function setFilter(filter) {
+            currentFilter = filter;
+            const buttons = document.querySelectorAll('.filter-option');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.filter-option').classList.add('active');
+            
+            const searchInput = document.getElementById('searchInput');
+            searchWorkers(searchInput.value);
         }
 
-        // Add loading indicator
-        searchResults.innerHTML = '<div class="loading">Searching...</div>';
+        function searchWorkers(query) {
+            if (!query.trim()) {
+                document.getElementById('searchResults').innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <p>Start typing to search for workers</p>
+                    </div>`;
+                return;
+            }
 
-        // Set new timeout
-        searchTimeout = setTimeout(() => {
-            fetch(`search_ajax.php?search=${encodeURIComponent(searchTerm)}`)
+            fetch(`search_workers.php?q=${encodeURIComponent(query)}&filter=${currentFilter}`)
                 .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        searchResults.innerHTML = `<div class="error">${data.error}</div>`;
-                        return;
-                    }
-
-                    if (data.workers.length === 0) {
+                .then(workers => {
+                    const searchResults = document.getElementById('searchResults');
+                    
+                    if (workers.length === 0) {
                         searchResults.innerHTML = `
                             <div class="no-results">
-                                <i class="fas fa-search fa-3x"></i>
+                                <i class="fas fa-exclamation-circle"></i>
                                 <p>No workers found matching your search</p>
                             </div>`;
                         return;
                     }
 
-                    let html = `
-                        <div class="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Payroll Number</th>
-                                        <th>Name</th>
-                                        <th>Department</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>`;
-                    
-                    data.workers.forEach(worker => {
-                        html += `
-                            <tr>
-                                <td>${worker.payroll_number}</td>
-                                <td>${worker.name}</td>
-                                <td>${worker.department}</td>
-                                <td>
-                                    <a href="../medical/view.php?id=${worker.payroll_number}" class="btn-view">
-                                        <i class="fas fa-eye"></i> View Medical History
-                                    </a>
-                                </td>
-                            </tr>`;
-                    });
-                    
-                    html += `
-                                </tbody>
-                            </table>
-                        </div>`;
-                    searchResults.innerHTML = html;
+                    const resultsHtml = workers.map(worker => `
+                        <div class="result-item">
+                            <div class="result-info">
+                                <div class="worker-name">${worker.name}</div>
+                                <div class="worker-details">
+                                    ${worker.payroll_number} • ${worker.department}
+                                </div>
+                            </div>
+                            <div class="result-actions">
+                                <a href="view.php?id=${worker.payroll_number}" 
+                                   class="btn-action btn-view">
+                                    <i class="fas fa-eye"></i>
+                                    View
+                                </a>
+                                <a href="edit.php?id=${worker.payroll_number}" 
+                                   class="btn-action btn-edit">
+                                    <i class="fas fa-edit"></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    searchResults.innerHTML = resultsHtml;
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    searchResults.innerHTML = `
-                        <div class="error">
-                            <i class="fas fa-exclamation-circle"></i>
-                            An error occurred while searching. Please try again.
+                    console.error('Search error:', error);
+                    document.getElementById('searchResults').innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <p>An error occurred while searching</p>
                         </div>`;
                 });
-        }, 300); // 300ms delay to prevent too many requests
-    }
-
-    // Add event listener for input changes
-    document.getElementById('searchInput').addEventListener('input', searchWorker);
-
-    // Search history functions
-    function addToSearchHistory(term) {
-        let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-        // Remove the term if it already exists
-        history = history.filter(item => item !== term);
-        // Add the new term at the beginning
-        history.unshift(term);
-        // Keep only the last 5 searches
-        history = history.slice(0, 5);
-        localStorage.setItem('searchHistory', JSON.stringify(history));
-        displaySearchHistory();
-    }
-
-    function displaySearchHistory() {
-        const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
-        const historyList = document.getElementById('searchHistoryList');
-        
-        if (history.length === 0) {
-            historyList.innerHTML = '<div class="no-history">No recent searches</div>';
-            return;
         }
-
-        historyList.innerHTML = history.map(term => `
-            <div class="history-item" onclick="useHistoryItem('${term}')">
-                <i class="fas fa-history"></i>
-                <span>${term}</span>
-            </div>
-        `).join('');
-    }
-
-    function useHistoryItem(term) {
-        const searchInput = document.getElementById('searchInput');
-        searchInput.value = term;
-        searchWorker();
-    }
-
-    function clearSearchHistory() {
-        localStorage.removeItem('searchHistory');
-        displaySearchHistory();
-    }
-
-    // Display search history on page load
-    displaySearchHistory();
     </script>
-
-    <style>
-    .search-container {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        margin-bottom: 2rem;
-    }
-
-    .search-history {
-        margin-top: 1.5rem;
-        padding-top: 1rem;
-        border-top: 1px solid #eee;
-    }
-
-    .history-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .history-header h3 {
-        color: #2c3e50;
-        font-size: 1.1rem;
-        margin: 0;
-    }
-
-    .history-item {
-        padding: 0.5rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: #666;
-    }
-
-    .history-item:hover {
-        background: #f8f9fa;
-        border-radius: 4px;
-    }
-
-    .no-history {
-        text-align: center;
-        color: #666;
-        padding: 1rem;
-    }
-
-    .btn-clear {
-        background: none;
-        border: none;
-        color: #e74c3c;
-        cursor: pointer;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .btn-clear:hover {
-        color: #c0392b;
-    }
-
-    .loading, .error, .no-results {
-        text-align: center;
-        padding: 2rem;
-        color: #666;
-    }
-
-    .error {
-        color: #e74c3c;
-    }
-
-    .no-results i, .error i {
-        margin-bottom: 1rem;
-        color: #95a5a6;
-    }
-    </style>
 </body>
 </html> 

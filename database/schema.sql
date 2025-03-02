@@ -46,4 +46,28 @@ CREATE TABLE drugs (
     name VARCHAR(100) UNIQUE NOT NULL,
     status ENUM('in_stock', 'low_stock', 'out_of_stock') DEFAULT 'in_stock',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-); 
+);
+
+-- Add these indexes to improve query performance
+ALTER TABLE medical_history
+ADD INDEX idx_visit_date (visit_date),
+ADD INDEX idx_payroll_disease (payroll_number, disease_classification_id);
+
+ALTER TABLE prescriptions
+ADD INDEX idx_drug_name (drug_name);
+
+ALTER TABLE leave_recommendations
+ADD INDEX idx_dates (start_date, end_date),
+ADD INDEX idx_status (status);
+
+-- Optimize table engines and character sets
+ALTER TABLE workers ENGINE = InnoDB;
+ALTER TABLE medical_history ENGINE = InnoDB;
+ALTER TABLE prescriptions ENGINE = InnoDB;
+ALTER TABLE leave_recommendations ENGINE = InnoDB;
+
+-- Set proper character sets
+ALTER TABLE workers CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE medical_history CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE prescriptions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE leave_recommendations CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; 

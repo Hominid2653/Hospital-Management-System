@@ -35,23 +35,28 @@ try {
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+<style>
+    .main-content {
+        padding: 2rem;
+        background: transparent;
+    }
+</style>
+
 <body>
     <div class="layout">
         <?php include '../includes/sidebar.php'; ?>
 
         <main class="main-content">
-            <header class="top-bar">
-                <div class="welcome-message">
-                    <h2>Drug Stock Overview</h2>
-                    <p>Monitor drug stock levels</p>
+            <div class="section-header">
+                <div>
+                    <h1>Drug Stock Management</h1>
+                    <p>Update and manage drug stock levels</p>
                 </div>
-                <div class="action-buttons">
-                    <a href="export.php" class="btn-export" title="Export to CSV">
-                        <i class="fas fa-file-csv"></i>
-                        Export Stock List
-                    </a>
-                </div>
-            </header>
+                <a href="list.php" class="btn-action secondary">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to List
+                </a>
+            </div>
 
             <div class="content-wrapper">
                 <!-- Stats Cards -->
@@ -358,6 +363,48 @@ try {
     .btn-export i {
         font-size: 1rem;
     }
+
+    /* Add these styles to your existing <style> section */
+    .btn-action {
+        background-color: var(--primary);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-action.secondary {
+        background-color: var(--secondary);
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        color: white;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .section-header h1 {
+        color: var(--primary);
+        margin: 0;
+        font-size: 1.75rem;
+    }
+
+    .section-header p {
+        color: var(--text-secondary);
+        margin: 0.25rem 0 0 0;
+    }
     </style>
+    <script src="../assets/js/menu.js"></script>
 </body>
 </html> 

@@ -1,68 +1,58 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../config/paths.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
+    header("Location: " . url('login.php'));
     exit();
 }
 
-$error = '';
-$success = '';
-$base_url = '../';
+$success = $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
-    $file = $_FILES['csv_file'];
-    $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    
-    if ($file_ext == 'csv') {
-        try {
-            $handle = fopen($file['tmp_name'], 'r');
-            
-            // Skip header row
-            fgetcsv($handle);
-            
-            $pdo->beginTransaction();
-            
-            $stmt = $pdo->prepare("INSERT INTO workers (payroll_number, name, department) VALUES (?, ?, ?)");
-            $successCount = 0;
-            $errors = [];
-            
-            while (($row = fgetcsv($handle)) !== false) {
-                if (empty($row[0])) continue; // Skip empty rows
-                
-                try {
-                    $stmt->execute([
-                        trim($row[0]), // payroll_number
-                        trim($row[1]), // name
-                        trim($row[2])  // department
-                    ]);
-                    $successCount++;
-                } catch (PDOException $e) {
-                    if ($e->getCode() == 23000) { // Duplicate entry
-                        $errors[] = "Payroll number {$row[0]} already exists";
-                    } else {
-                        $errors[] = "Error adding worker {$row[0]}: " . $e->getMessage();
-                    }
-                }
-            }
-            
-            fclose($handle);
-            
-            if (count($errors) == 0) {
-                $pdo->commit();
-                $success = "Successfully imported $successCount workers";
-            } else {
-                $pdo->rollBack();
-                $error = "Import failed:<br>" . implode("<br>", $errors);
-            }
-            
-        } catch (Exception $e) {
-            $pdo->rollBack();
-            $error = "Error processing file: " . $e->getMessage();
+    try {
+        $file = $_FILES['csv_file'];
+        
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception('File upload failed');
         }
-    } else {
-        $error = "Please upload a CSV file";
+        
+        if ($file['type'] !== 'text/csv') {
+            throw new Exception('Please upload a CSV file');
+        }
+
+        $handle = fopen($file['tmp_name'], 'r');
+        $header = fgetcsv($handle);
+        
+        $pdo->beginTransaction();
+        
+        while (($data = fgetcsv($handle)) !== FALSE) {
+            $stmt = $pdo->prepare("
+                INSERT INTO workers (payroll_number, name, department, role) 
+                VALUES (?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE 
+                    name = VALUES(name),
+                    department = VALUES(department),
+                    role = VALUES(role)
+            ");
+            $stmt->execute([
+                $data[0], // payroll_number
+                $data[1], // name
+                $data[2], // department
+                $data[3]  // role
+            ]);
+        }
+        
+        fclose($handle);
+        $pdo->commit();
+        $success = 'Workers imported successfully';
+        
+    } catch (Exception $e) {
+        if (isset($pdo) && $pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        $error = 'Import failed: ' . $e->getMessage();
     }
 }
 ?>
@@ -73,71 +63,289 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Import Workers - Sian Roses</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo url('assets/css/style.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .main-content {
+            padding: 2rem;
+            background: none;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header-left h1 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            margin: 0;
+        }
+
+        .section-header-left p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0 0 0;
+        }
+
+        .import-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .import-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .file-upload {
+            border: 2px dashed var(--border);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+            background: rgba(231, 84, 128, 0.05);
+        }
+
+        .file-upload i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .file-upload p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .template-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .template-link a {
+            color: var(--primary);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .template-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-success {
+            background: rgba(46, 213, 115, 0.1);
+            color: #2ed573;
+            border: 1px solid rgba(46, 213, 115, 0.2);
+        }
+
+        .alert-error {
+            background: rgba(255, 71, 87, 0.1);
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.2);
+        }
+
+        .instructions {
+            margin-top: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .instructions h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .instructions ul {
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .instructions li {
+            margin-bottom: 0.5rem;
+        }
+
+        .selected-file {
+            margin-top: 1rem;
+            font-weight: 500;
+            color: var(--primary);
+        }
+
+        .highlight {
+            border-color: var(--primary);
+            background: rgba(231, 84, 128, 0.05);
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
         <?php include '../includes/sidebar.php'; ?>
 
         <main class="main-content">
-            <header class="top-bar">
-                <div class="welcome-message">
-                    <h2>Import Workers</h2>
-                    <p>Upload CSV file with worker records</p>
+            <div class="section-header">
+                <div class="section-header-left">
+                    <h1>Import Workers</h1>
+                    <p>Import worker records from CSV file</p>
                 </div>
-            </header>
+            </div>
 
-            <div class="content-wrapper">
-                <div class="import-container">
-                    <?php if ($error): ?>
-                        <div class="error-message">
-                            <i class="fas fa-exclamation-circle"></i>
-                            <?php echo $error; ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($success): ?>
-                        <div class="success-message">
-                            <i class="fas fa-check-circle"></i>
-                            <?php echo $success; ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h3><i class="fas fa-file-import"></i> Import Workers</h3>
-                        </div>
-                        <div class="card-body">
-                            <form method="POST" enctype="multipart/form-data" class="styled-form">
-                                <div class="form-group">
-                                    <label for="csv_file">
-                                        <i class="fas fa-file-csv"></i>
-                                        Select CSV File
-                                    </label>
-                                    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
-                                </div>
-
-                                <div class="template-download">
-                                    <p><i class="fas fa-download"></i> Download template:</p>
-                                    <a href="template.csv" class="btn-secondary">
-                                        <i class="fas fa-file-csv"></i>
-                                        CSV Template
-                                    </a>
-                                </div>
-
-                                <button type="submit" class="btn-import">
-                                    <i class="fas fa-upload"></i>
-                                    Import Workers
-                                </button>
-                            </form>
-                        </div>
+            <div class="import-container">
+                <?php if ($success): ?>
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i>
+                        <?php echo $success; ?>
                     </div>
+                <?php endif; ?>
+
+                <?php if ($error): ?>
+                    <div class="alert alert-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <?php echo $error; ?>
+                    </div>
+                <?php endif; ?>
+
+                <form class="import-form" method="POST" enctype="multipart/form-data">
+                    <label class="file-upload" for="csv_file">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag and drop your CSV file here</p>
+                        <p>or click to browse</p>
+                        <input type="file" 
+                               id="csv_file" 
+                               name="csv_file" 
+                               accept=".csv"
+                               onchange="updateFileName(this)">
+                        <p id="fileName" class="selected-file"></p>
+                    </label>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-file-import"></i>
+                        Import Workers
+                    </button>
+                </form>
+
+                <div class="template-link">
+                    <a href="<?php echo url('workers/template.csv'); ?>" download>
+                        <i class="fas fa-download"></i>
+                        Download CSV Template
+                    </a>
+                </div>
+
+                <div class="instructions">
+                    <h3>Instructions</h3>
+                    <ul>
+                        <li>Download the CSV template using the link above</li>
+                        <li>Fill in the worker details following the template format:
+                            <ul>
+                                <li>Payroll Number</li>
+                                <li>Full Name</li>
+                                <li>Department</li>
+                                <li>Role</li>
+                            </ul>
+                        </li>
+                        <li>Save the file and upload it using the form above</li>
+                        <li>The system will process the file and import the workers</li>
+                    </ul>
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="../assets/js/menu.js"></script>
+    <script src="<?php echo url('assets/js/menu.js'); ?>"></script>
+    <script>
+        function updateFileName(input) {
+            const fileName = document.getElementById('fileName');
+            if (input.files.length > 0) {
+                fileName.textContent = input.files[0].name;
+            } else {
+                fileName.textContent = '';
+            }
+        }
+
+        // Drag and drop functionality
+        const dropZone = document.querySelector('.file-upload');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('highlight');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('highlight');
+        }
+
+        dropZone.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            const fileInput = document.getElementById('csv_file');
+            
+            fileInput.files = files;
+            updateFileName(fileInput);
+        }
+    </script>
 </body>
 </html> 

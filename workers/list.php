@@ -1,13 +1,12 @@
 <?php
 session_start();
 require_once '../config/database.php';
+require_once '../config/paths.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../login.php");
+    header("Location: " . url('login.php'));
     exit();
 }
-
-$base_url = '../';
 
 try {
     // Get all workers with their latest medical visit
@@ -31,177 +30,291 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workers List - Sian Roses</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <title>Employee List - Sian Roses</title>
+    <link rel="stylesheet" href="<?php echo url('assets/css/style.css'); ?>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .main-content {
+            padding: 2rem;
+            background: none;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header-left h1 {
+            color: var(--primary);
+            font-size: 1.75rem;
+            margin: 0;
+        }
+
+        .section-header-left p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0 0 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-action {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-action.secondary {
+            background: var(--secondary);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .workers-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(231, 84, 128, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        .workers-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .workers-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .workers-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+
+        .workers-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .workers-table tr:hover {
+            background: rgba(231, 84, 128, 0.05);
+        }
+
+        .worker-name {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .department-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            background: rgba(231, 84, 128, 0.1);
+            color: var(--primary);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-table-action {
+            padding: 0.5rem;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-view {
+            background: var(--primary);
+        }
+
+        .btn-edit {
+            background: var(--secondary);
+        }
+
+        .btn-table-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .no-records i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
 </head>
 <body>
     <div class="layout">
         <?php include '../includes/sidebar.php'; ?>
 
         <main class="main-content">
-            <header class="top-bar">
-                <div class="welcome-message">
-                    <h2>Workers List</h2>
-                    <p>Manage all registered workers</p>
+            <div class="section-header">
+                <div class="section-header-left">
+                    <h1>Employee List</h1>
+                    <p>View and manage all employee records</p>
                 </div>
-                <div class="action-buttons">
-                    <a href="add.php" class="btn-add">
+                <div class="header-actions">
+                    <a href="<?php echo url('workers/add.php'); ?>" class="btn-action">
                         <i class="fas fa-plus"></i>
                         Add New Worker
                     </a>
-                    <a href="import.php" class="btn-import">
+                    <a href="<?php echo url('workers/import.php'); ?>" class="btn-action secondary">
                         <i class="fas fa-file-import"></i>
-                        Import Workers
+                        Import
                     </a>
-                    <a href="export.php" class="btn-export">
+                    <a href="<?php echo url('workers/export.php'); ?>" class="btn-action secondary">
                         <i class="fas fa-download"></i>
-                        Export List
+                        Export
                     </a>
                 </div>
-            </header>
+            </div>
 
-            <div class="content-wrapper">
-                <!-- Management Workers Card -->
-                <div class="workers-list card">
-                    <div class="card-header">
-                        <h3><i class="fas fa-user-tie"></i> Management Staff</h3>
-                    </div>
-                    <div class="list-header">
-                        <div class="search-box">
-                            <i class="fas fa-search search-icon"></i>
-                            <input type="text" id="workerSearch" 
-                                   placeholder="Search by payroll number, name or department..."
-                                   onkeyup="filterWorkers()">
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Payroll Number</th>
-                                    <th>Name</th>
-                                    <th>Department</th>
-                                    <th>Last Visit</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $management_workers = array_filter($workers, function($worker) {
-                                    return stripos($worker['department'], 'management') !== false || 
-                                           stripos($worker['department'], 'admin') !== false;
-                                });
-                                if (empty($management_workers)): ?>
-                                    <tr>
-                                        <td colspan="5" class="no-records">
-                                            <i class="fas fa-user-tie"></i>
-                                            <p>No management staff registered</p>
-                                        </td>
-                                    </tr>
-                                <?php else: ?>
-                                    <?php foreach ($management_workers as $worker): ?>
-                                        <tr>
-                                            <td class="clickable" onclick="window.location.href='../medical/view.php?id=<?php echo $worker['payroll_number']; ?>'">
-                                                <?php echo htmlspecialchars($worker['payroll_number']); ?>
-                                            </td>
-                                            <td class="clickable" onclick="window.location.href='../medical/view.php?id=<?php echo $worker['payroll_number']; ?>'">
-                                                <?php echo htmlspecialchars($worker['name']); ?>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($worker['department']); ?></td>
-                                            <td>
-                                                <?php 
-                                                    echo $worker['last_visit'] 
-                                                        ? date('M d, Y', strtotime($worker['last_visit']))
-                                                        : 'No visits yet';
-                                                ?>
-                                            </td>
-                                            <td class="actions">
-                                                <a href="../medical/view.php?id=<?php echo $worker['payroll_number']; ?>" 
-                                                   class="btn-view" title="View Medical History">
-                                                    <i class="fas fa-notes-medical"></i>
-                                                </a>
-                                                <a href="edit.php?id=<?php echo $worker['payroll_number']; ?>" 
-                                                   class="btn-edit" title="Edit Worker">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="workers-container">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" 
+                           id="workerSearch" 
+                           placeholder="Search workers..." 
+                           oninput="filterWorkers()">
                 </div>
 
-                <!-- Farm Workers Card -->
-                <div class="workers-list card mt-4">
-                    <div class="card-header">
-                        <h3><i class="fas fa-users"></i> Farm Workers</h3>
+                <?php if (empty($workers)): ?>
+                    <div class="no-records">
+                        <i class="fas fa-users"></i>
+                        <p>No workers found in the database</p>
                     </div>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Payroll Number</th>
-                                    <th>Name</th>
-                                    <th>Department</th>
-                                    <th>Last Visit</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                $farm_workers = array_filter($workers, function($worker) {
-                                    return stripos($worker['department'], 'management') === false && 
-                                           stripos($worker['department'], 'admin') === false;
-                                });
-                                if (empty($farm_workers)): ?>
-                                    <tr>
-                                        <td colspan="5" class="no-records">
-                                            <i class="fas fa-users"></i>
-                                            <p>No farm workers registered</p>
-                                        </td>
-                                    </tr>
-                                <?php else: ?>
-                                    <?php foreach ($farm_workers as $worker): ?>
-                                        <tr>
-                                            <td class="clickable" onclick="window.location.href='../medical/view.php?id=<?php echo $worker['payroll_number']; ?>'">
-                                                <?php echo htmlspecialchars($worker['payroll_number']); ?>
-                                            </td>
-                                            <td class="clickable" onclick="window.location.href='../medical/view.php?id=<?php echo $worker['payroll_number']; ?>'">
-                                                <?php echo htmlspecialchars($worker['name']); ?>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($worker['department']); ?></td>
-                                            <td>
-                                                <?php 
-                                                    echo $worker['last_visit'] 
-                                                        ? date('M d, Y', strtotime($worker['last_visit']))
-                                                        : 'No visits yet';
-                                                ?>
-                                            </td>
-                                            <td class="actions">
-                                                <a href="../medical/view.php?id=<?php echo $worker['payroll_number']; ?>" 
-                                                   class="btn-view" title="View Medical History">
-                                                    <i class="fas fa-notes-medical"></i>
-                                                </a>
-                                                <a href="edit.php?id=<?php echo $worker['payroll_number']; ?>" 
-                                                   class="btn-edit" title="Edit Worker">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <?php else: ?>
+                    <table class="workers-table">
+                        <thead>
+                            <tr>
+                                <th>Payroll Number</th>
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Role</th>
+                                <th>Last Visit</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($workers as $worker): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($worker['payroll_number']); ?></td>
+                                <td class="worker-name"><?php echo htmlspecialchars($worker['name']); ?></td>
+                                <td>
+                                    <span class="department-badge">
+                                        <?php echo htmlspecialchars($worker['department']); ?>
+                                    </span>
+                                </td>
+                                <td><?php echo htmlspecialchars($worker['role']); ?></td>
+                                <td>
+                                    <?php 
+                                    echo $worker['last_visit'] 
+                                        ? date('M j, Y', strtotime($worker['last_visit']))
+                                        : 'No visits';
+                                    ?>
+                                </td>
+                                <td>
+                                    <div class="table-actions">
+                                        <a href="<?php echo url('workers/view.php?id=' . $worker['payroll_number']); ?>" 
+                                           class="btn-table-action btn-view">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="<?php echo url('workers/edit.php?id=' . $worker['payroll_number']); ?>" 
+                                           class="btn-table-action btn-edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
             </div>
         </main>
     </div>
 
-    <script src="../assets/js/menu.js"></script>
-    <script src="js/list.js"></script>
+    <script src="<?php echo url('assets/js/menu.js'); ?>"></script>
+    <script>
+        function filterWorkers() {
+            const input = document.getElementById('workerSearch');
+            const filter = input.value.toLowerCase();
+            const tbody = document.querySelector('tbody');
+            const rows = tbody.getElementsByTagName('tr');
+
+            for (let row of rows) {
+                const cells = row.getElementsByTagName('td');
+                let found = false;
+
+                for (let cell of cells) {
+                    if (cell.textContent.toLowerCase().indexOf(filter) > -1) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                row.style.display = found ? '' : 'none';
+            }
+        }
+    </script>
 </body>
 </html> 
