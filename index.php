@@ -205,7 +205,7 @@ try {
                     searchResults.innerHTML = '<div class="error">Error performing search</div>';
                     console.error('Search error:', error);
                 });
-        }, 300); // 300ms delay to prevent too many requests
+        }, 300); // delay
     }
 
     // Add event listener for input changes

@@ -2,7 +2,7 @@
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
 define('DB_PASS', '');
-define('DB_NAME', 'sianmedical');
+define('DB_NAME', 'SIAN');
 
 try {
     $pdo = new PDO(
