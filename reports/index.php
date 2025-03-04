@@ -313,12 +313,12 @@ try {
                     </div>
                     <div class="stat-value"><?php echo $total_workers; ?></div>
                     <div class="stat-label">Total Workers</div>
-                </div>
+                        </div>
 
                 <div class="stat-card">
                     <div class="stat-icon">
                         <i class="fas fa-stethoscope"></i>
-                    </div>
+                        </div>
                     <div class="stat-value"><?php echo $total_visits; ?></div>
                     <div class="stat-label">Medical Visits</div>
                 </div>
@@ -329,8 +329,8 @@ try {
                     </div>
                     <div class="stat-value"><?php echo $total_drugs; ?></div>
                     <div class="stat-label">Drugs in Inventory</div>
-                </div>
-            </div>
+                                    </div>
+                                </div>
 
             <div class="reports-grid">
                 <div class="report-card">
@@ -348,14 +348,14 @@ try {
                             <i class="fas fa-download"></i>
                             Export
                         </a>
-                    </div>
-                </div>
+                                    </div>
+                                </div>
 
                 <div class="report-card">
                     <div class="report-header">
                         <i class="fas fa-pills report-icon"></i>
                         <h3 class="report-title">Drug Usage Report</h3>
-                    </div>
+                                        </div>
                     <p>Track and analyze drug consumption patterns</p>
                     <div class="report-actions">
                         <a href="drug_usage.php" class="btn-report">
@@ -366,23 +366,23 @@ try {
                             <i class="fas fa-download"></i>
                             Export
                         </a>
-                    </div>
-                </div>
-            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
             <div class="charts-grid">
                 <div class="chart-card">
                     <div class="chart-header">
                         <h3>Disease Categories</h3>
-                    </div>
+                            </div>
                     <canvas id="departmentChart"></canvas>
-                </div>
+                        </div>
                 <div class="chart-card">
                     <div class="chart-header">
                         <h3>Monthly Visits</h3>
                     </div>
                     <canvas id="visitsChart"></canvas>
-                </div>
+                        </div>
             </div>
         </main>
     </div>
@@ -411,15 +411,15 @@ try {
                 }]
             },
             options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+                labels: {
                             boxWidth: 8,
                             padding: 10,
-                            font: {
+                    font: {
                                 size: 10
                             }
                         }
@@ -442,27 +442,27 @@ try {
         // Monthly Visits Chart
         const visitsCtx = document.getElementById('visitsChart').getContext('2d');
         new Chart(visitsCtx, {
-            type: 'bar',
-            data: {
+        type: 'bar',
+        data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
+            datasets: [{
                     label: 'Medical Visits',
                     data: [65, 59, 80, 81, 56, 55],
                     backgroundColor: 'rgba(231, 84, 128, 0.8)',
                     borderColor: 'rgba(231, 84, 128, 1)',
-                    borderWidth: 1
+                borderWidth: 1
                 }]
-            },
-            options: {
+        },
+        options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
     </script>
 </body>
 </html> 

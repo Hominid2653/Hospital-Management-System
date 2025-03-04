@@ -394,7 +394,7 @@ if (isset($_GET['id'])) {
                     <div class="history-header">
                         <h2 class="history-title">Medical History</h2>
                         <a href="../medical/view.php?id=<?php echo $worker['payroll_number']; ?>" class="btn-action btn-primary">
-                            <i class="fas fa-plus"></i>
+                            <i class="fas fa-arrow-right"></i>
                             To History and Leave
                         </a>
                     </div>

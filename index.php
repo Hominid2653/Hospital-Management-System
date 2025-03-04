@@ -87,20 +87,29 @@ function getTimeBasedGreeting() {
 
         .section-header {
             margin-bottom: 2rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1100;
         }
 
         .section-header h1 {
-            color: var(--primary);
-            font-size: 1.75rem;
             margin: 0;
+            color: var(--text-primary);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
         }
 
         .section-header p {
             color: var(--text-secondary);
-            margin: 0.5rem 0 0 0;
+            margin: 0;
         }
 
         .stats-grid {
+            position: relative;
+            z-index: 1000;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.5rem;
@@ -232,13 +241,169 @@ function getTimeBasedGreeting() {
         .live-clock {
             font-size: 1.1rem;
             color: var(--text-secondary);
-            margin-top: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .visit-info h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1rem;
+            line-height: 1.2;
+        }
+
+        .worker-link {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .worker-link:hover {
+            color: var(--primary);
+        }
+
+        .diagnosis {
+            margin: 0;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: 1fr;
             }
+        }
+
+        .universal-search {
+            position: relative;
+            z-index: 1100;
+            margin: 1rem 0;
+        }
+        
+        .search-container {
+            position: relative;
+            z-index: 1100;
+        }
+        
+        #universalSearch {
+            width: 100%;
+            padding: 0.875rem 3rem 0.875rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--bg-light);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        
+        #universalSearch:focus {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            outline: none;
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+        
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 0.5rem;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1100;
+        }
+        
+        .search-results.active {
+            display: block;
+        }
+        
+        .result-item {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        
+        .result-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .result-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .result-content {
+            flex: 1;
+        }
+        
+        .result-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .result-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .result-type {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            background: #e9ecef;
+            color: var(--text-secondary);
+        }
+        
+        .result-item .result-content {
+            padding: 0.5rem 0;
+        }
+        
+        /* Loading state */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .searching .result-content {
+            animation: pulse 1s infinite;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .error-message i {
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -249,7 +414,16 @@ function getTimeBasedGreeting() {
         <main class="main-content">
             <div class="section-header">
                 <h1><?php echo getTimeBasedGreeting(); ?></h1>
-                <p>Welcome to your dashboard</p>
+                <div class="universal-search">
+                    <div class="search-container">
+                        <input type="text" 
+                               id="universalSearch" 
+                               placeholder="Search workers, medical records, or drugs..."
+                               autocomplete="off">
+                        <i class="fas fa-search search-icon"></i>
+                    </div>
+                    <div id="searchResults" class="search-results"></div>
+                </div>
                 <div class="live-clock"></div>
             </div>
 
@@ -318,7 +492,12 @@ function getTimeBasedGreeting() {
                             <i class="fas fa-user-nurse"></i>
                         </div>
                         <div class="activity-details">
-                            <div class="activity-title"><?php echo htmlspecialchars($visit['name']); ?></div>
+                            <div class="activity-title">
+                                <a href="<?php echo url('workers/view.php?id=' . urlencode($visit['payroll_number'])); ?>" 
+                                   class="worker-link">
+                                    <?php echo htmlspecialchars($visit['name']); ?>
+                                </a>
+                            </div>
                             <div class="activity-meta">
                                 <?php echo htmlspecialchars($visit['department']); ?> • 
                                 <?php echo date('M j, Y', strtotime($visit['visit_date'])); ?>
@@ -332,6 +511,7 @@ function getTimeBasedGreeting() {
     </div>
 
     <script src="<?php echo url('assets/js/menu.js'); ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function updateClock() {
             const now = new Date();
@@ -347,6 +527,109 @@ function getTimeBasedGreeting() {
         // Update clock immediately and then every second
         updateClock();
         setInterval(updateClock, 1000);
+
+        const searchInput = document.getElementById('universalSearch');
+        const searchResults = document.getElementById('searchResults');
+        let searchTimeout;
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            const query = this.value.trim();
+            
+            if (query.length < 2) {
+                searchResults.classList.remove('active');
+                return;
+            }
+            
+            searchTimeout = setTimeout(() => performSearch(query), 300);
+        });
+
+        async function performSearch(query) {
+            searchResults.innerHTML = '<div class="result-item"><div class="result-content">Searching...</div></div>';
+            searchResults.classList.add('active');
+
+            try {
+                const response = await fetch(`search.php?q=${encodeURIComponent(query)}`, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                let data;
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    throw new Error('Invalid response from server');
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.message || `HTTP error! status: ${response.status}`);
+                }
+
+                if (data.error) {
+                    throw new Error(data.message);
+                }
+                
+                if (data.results.length > 0) {
+                    displayResults(data.results);
+                } else {
+                    searchResults.innerHTML = '<div class="result-item"><div class="result-content">No results found</div></div>';
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                searchResults.innerHTML = `
+                    <div class="result-item">
+                        <div class="result-content">
+                            <div class="error-message">
+                                <i class="fas fa-exclamation-circle"></i>
+                                ${error.message || 'Error performing search'}
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        function displayResults(results) {
+            const html = results.map(result => `
+                <a href="${result.url}" class="result-item">
+                    <div class="result-icon">
+                        <i class="fas ${getIconForType(result.type)}"></i>
+                    </div>
+                    <div class="result-content">
+                        <div class="result-title">${escapeHtml(result.title)}</div>
+                        <div class="result-subtitle">${escapeHtml(result.subtitle)}</div>
+                    </div>
+                    <span class="result-type">${result.type}</span>
+                </a>
+            `).join('');
+            searchResults.innerHTML = html;
+        }
+
+        function getIconForType(type) {
+            switch (type) {
+                case 'worker': return 'fa-user';
+                case 'medical': return 'fa-notes-medical';
+                case 'drug': return 'fa-pills';
+                default: return 'fa-search';
+            }
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html> 

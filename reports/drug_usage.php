@@ -266,6 +266,40 @@ try {
         .report-table tr.out-of-stock {
             background: rgba(255, 71, 87, 0.05);
         }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            margin-right: 1rem;
+        }
+
+        .search-box input {
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border);
+            border-radius: 25px;
+            font-size: 0.9rem;
+            width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(231, 84, 128, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
@@ -278,10 +312,16 @@ try {
                     <h1>Drug Usage Report</h1>
                     <p>Analysis of drug prescriptions and inventory status</p>
                 </div>
-                <a href="?export=true" class="btn-export">
-                    <i class="fas fa-download"></i>
-                    Export to CSV
-                </a>
+                <div class="header-actions">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search drugs...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <a href="?export=true" class="btn-export">
+                        <i class="fas fa-download"></i>
+                        Export to CSV
+                    </a>
+                </div>
             </div>
 
             <div class="report-container">
@@ -357,5 +397,22 @@ try {
     </div>
 
     <script src="<?php echo url('assets/js/menu.js'); ?>"></script>
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchText = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.report-table tbody tr');
+            
+            rows.forEach(row => {
+                const drugName = row.querySelector('td:first-child').textContent.toLowerCase();
+                const status = row.querySelector('.status-badge').textContent.toLowerCase();
+                
+                if (drugName.includes(searchText) || status.includes(searchText)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html> 

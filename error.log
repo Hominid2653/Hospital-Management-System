@@ -734,3 +734,799 @@ Stack trace:
 [01-Mar-2025 18:18:01 Europe/Berlin] MAIL_PASSWORD is empty
 [01-Mar-2025 18:18:01 Europe/Berlin] MAIL_FROM_NAME is empty
 [01-Mar-2025 18:18:01 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"292523","login":""}
+[02-Mar-2025 17:01:30 Europe/Berlin] Testing email configuration...
+[02-Mar-2025 17:01:30 Europe/Berlin] MAIL_USERNAME is empty
+[02-Mar-2025 17:01:30 Europe/Berlin] MAIL_PASSWORD is empty
+[02-Mar-2025 17:01:30 Europe/Berlin] MAIL_FROM_NAME is empty
+[02-Mar-2025 17:01:31 Europe/Berlin] Testing email configuration...
+[02-Mar-2025 17:01:31 Europe/Berlin] MAIL_USERNAME is empty
+[02-Mar-2025 17:01:31 Europe/Berlin] MAIL_PASSWORD is empty
+[02-Mar-2025 17:01:31 Europe/Berlin] MAIL_FROM_NAME is empty
+[02-Mar-2025 17:01:44 Europe/Berlin] Testing email configuration...
+[02-Mar-2025 17:01:44 Europe/Berlin] MAIL_USERNAME is empty
+[02-Mar-2025 17:01:44 Europe/Berlin] MAIL_PASSWORD is empty
+[02-Mar-2025 17:01:44 Europe/Berlin] MAIL_FROM_NAME is empty
+[02-Mar-2025 17:01:44 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"","verify":"1"}
+[02-Mar-2025 17:01:44 Europe/Berlin] Verifying credentials for username: Elias Cheruiyot
+[02-Mar-2025 17:01:44 Europe/Berlin] User found: yes
+[02-Mar-2025 17:01:44 Europe/Berlin] Attempting to send email to: eliascheruiyot9@gmail.com
+[02-Mar-2025 17:01:44 Europe/Berlin] Initializing mail send process
+[02-Mar-2025 17:01:44 Europe/Berlin] Target email: eliascheruiyot9@gmail.com
+[02-Mar-2025 17:01:44 Europe/Berlin] SMTP Username length: 28
+[02-Mar-2025 17:01:44 Europe/Berlin] SMTP Password length: 19
+[02-Mar-2025 17:01:44 Europe/Berlin] Attempting to send email...
+[02-Mar-2025 17:01:44 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP a640c23a62f3a-abf0c6f5363sm656144866b.123 - gsmtp
+
+[02-Mar-2025 17:01:44 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[02-Mar-2025 17:01:44 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.90.177.184]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[02-Mar-2025 17:01:44 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: STARTTLS
+
+[02-Mar-2025 17:01:44 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[02-Mar-2025 17:01:45 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[02-Mar-2025 17:01:45 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.90.177.184]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[02-Mar-2025 17:01:45 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: AUTH LOGIN
+
+[02-Mar-2025 17:01:45 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[02-Mar-2025 17:01:45 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[02-Mar-2025 17:01:45 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[02-Mar-2025 17:01:45 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[02-Mar-2025 17:01:46 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[02-Mar-2025 17:01:46 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MAIL FROM:<hominidphotography@gmail.com>
+
+[02-Mar-2025 17:01:46 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.0 OK a640c23a62f3a-abf0c6f5363sm656144866b.123 - gsmtp
+
+[02-Mar-2025 17:01:46 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RCPT TO:<eliascheruiyot9@gmail.com>
+
+[02-Mar-2025 17:01:46 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 OK a640c23a62f3a-abf0c6f5363sm656144866b.123 - gsmtp
+
+[02-Mar-2025 17:01:46 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: DATA
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 354 Go ahead a640c23a62f3a-abf0c6f5363sm656144866b.123 - gsmtp
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Date: Sun, 2 Mar 2025 17:01:44 +0100
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: To: eliascheruiyot9@gmail.com
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: From: Sian Medical <hominidphotography@gmail.com>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Subject: Login Verification Code - Sian Medical
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Message-ID: <1LNgkCIVUa4bO7VoW3eHPdhd7d10KS3XJ8dRsUFxY@localhost>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MIME-Version: 1.0
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:  boundary="b1=_1LNgkCIVUa4bO7VoW3eHPdhd7d10KS3XJ8dRsUFxY"
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_1LNgkCIVUa4bO7VoW3eHPdhd7d10KS3XJ8dRsUFxY
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Your verification code is: 655084
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_1LNgkCIVUa4bO7VoW3eHPdhd7d10KS3XJ8dRsUFxY
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <h2 style='color: #2c614f; margin-bottom: 20px;'>Login Verification</h2>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Hello Elias Cheruiyot,</p>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Your verification code for Sian Medical login is:</p>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <div style='background-color: #f5f5f5; padding: 15px; text-align: center; margin: 20px 0;'>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                     <h1 style='color: #2c614f; letter-spacing: 5px; margin: 0;'>655084</h1>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 </div>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>This code will expire in 5 minutes.</p>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p style='color: #666; font-size: 0.9em;'>If you didn't request this code, please ignore this email.</p>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             </div>
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:         
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_1LNgkCIVUa4bO7VoW3eHPdhd7d10KS3XJ8dRsUFxY--
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[02-Mar-2025 17:01:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: .
+
+[02-Mar-2025 17:01:48 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.0.0 OK  1740931310 a640c23a62f3a-abf0c6f5363sm656144866b.123 - gsmtp
+
+[02-Mar-2025 17:01:48 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RSET
+
+[02-Mar-2025 17:01:48 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 Flushed a640c23a62f3a-abf0c6f5363sm656144866b.123 - gsmtp
+
+[02-Mar-2025 17:01:48 Europe/Berlin] Email sent successfully
+[02-Mar-2025 17:01:48 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: QUIT
+
+[02-Mar-2025 17:01:48 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 221 2.0.0 closing connection a640c23a62f3a-abf0c6f5363sm656144866b.123 - gsmtp
+
+[02-Mar-2025 17:01:48 Europe/Berlin] Email sent successfully
+[02-Mar-2025 17:02:34 Europe/Berlin] Testing email configuration...
+[02-Mar-2025 17:02:34 Europe/Berlin] MAIL_USERNAME is empty
+[02-Mar-2025 17:02:34 Europe/Berlin] MAIL_PASSWORD is empty
+[02-Mar-2025 17:02:34 Europe/Berlin] MAIL_FROM_NAME is empty
+[02-Mar-2025 17:02:34 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"655084","login":""}
+[03-Mar-2025 08:13:41 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 08:13:41 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 08:13:41 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 08:13:41 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 09:21:26 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 09:21:26 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 09:21:26 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 09:21:26 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 09:21:41 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 09:21:41 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 09:21:41 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 09:21:41 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 09:21:41 Europe/Berlin] POST request received: {"username":"Sian Flowers","password":"Sian@2025*","verification_code":"","verify":"1"}
+[03-Mar-2025 09:21:41 Europe/Berlin] Verifying credentials for username: Sian Flowers
+[03-Mar-2025 09:21:41 Europe/Berlin] User found: no
+[03-Mar-2025 09:21:41 Europe/Berlin] Invalid credentials
+[03-Mar-2025 09:21:46 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 09:21:46 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 09:21:46 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 09:21:46 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 09:21:46 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"","verify":"1"}
+[03-Mar-2025 09:21:46 Europe/Berlin] Verifying credentials for username: Elias Cheruiyot
+[03-Mar-2025 09:21:46 Europe/Berlin] User found: yes
+[03-Mar-2025 09:21:46 Europe/Berlin] Attempting to send email to: eliascheruiyot9@gmail.com
+[03-Mar-2025 09:21:46 Europe/Berlin] Initializing mail send process
+[03-Mar-2025 09:21:46 Europe/Berlin] Target email: eliascheruiyot9@gmail.com
+[03-Mar-2025 09:21:46 Europe/Berlin] SMTP Username length: 28
+[03-Mar-2025 09:21:46 Europe/Berlin] SMTP Password length: 19
+[03-Mar-2025 09:21:46 Europe/Berlin] Attempting to send email...
+[03-Mar-2025 09:21:47 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 5b1f17b1804b1-43b8d6bc3fcsm121881975e9.0 - gsmtp
+
+[03-Mar-2025 09:21:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[03-Mar-2025 09:21:47 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [2c0f:2a80:2424:3b10:ade3:e619:20b3:33c0]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[03-Mar-2025 09:21:47 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: STARTTLS
+
+[03-Mar-2025 09:21:47 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[03-Mar-2025 09:21:48 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[03-Mar-2025 09:21:48 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [2c0f:2a80:2424:3b10:ade3:e619:20b3:33c0]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[03-Mar-2025 09:21:48 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: AUTH LOGIN
+
+[03-Mar-2025 09:21:48 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[03-Mar-2025 09:21:48 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[03-Mar-2025 09:21:49 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[03-Mar-2025 09:21:49 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[03-Mar-2025 09:21:49 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[03-Mar-2025 09:21:49 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MAIL FROM:<hominidphotography@gmail.com>
+
+[03-Mar-2025 09:21:49 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.0 OK 5b1f17b1804b1-43b8d6bc3fcsm121881975e9.0 - gsmtp
+
+[03-Mar-2025 09:21:49 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RCPT TO:<eliascheruiyot9@gmail.com>
+
+[03-Mar-2025 09:21:49 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 OK 5b1f17b1804b1-43b8d6bc3fcsm121881975e9.0 - gsmtp
+
+[03-Mar-2025 09:21:49 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: DATA
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 354 Go ahead 5b1f17b1804b1-43b8d6bc3fcsm121881975e9.0 - gsmtp
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Date: Mon, 3 Mar 2025 09:21:46 +0100
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: To: eliascheruiyot9@gmail.com
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: From: Sian Medical <hominidphotography@gmail.com>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Subject: Login Verification Code - Sian Medical
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Message-ID: <VMezVXGYeZq3LL22gUX9iI8J1t94b5n3DjAyYGrqE@localhost>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MIME-Version: 1.0
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:  boundary="b1=_VMezVXGYeZq3LL22gUX9iI8J1t94b5n3DjAyYGrqE"
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_VMezVXGYeZq3LL22gUX9iI8J1t94b5n3DjAyYGrqE
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Your verification code is: 207935
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_VMezVXGYeZq3LL22gUX9iI8J1t94b5n3DjAyYGrqE
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <h2 style='color: #2c614f; margin-bottom: 20px;'>Login Verification</h2>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Hello Elias Cheruiyot,</p>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Your verification code for Sian Medical login is:</p>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <div style='background-color: #f5f5f5; padding: 15px; text-align: center; margin: 20px 0;'>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                     <h1 style='color: #2c614f; letter-spacing: 5px; margin: 0;'>207935</h1>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 </div>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>This code will expire in 5 minutes.</p>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p style='color: #666; font-size: 0.9em;'>If you didn't request this code, please ignore this email.</p>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             </div>
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:         
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_VMezVXGYeZq3LL22gUX9iI8J1t94b5n3DjAyYGrqE--
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 09:21:50 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: .
+
+[03-Mar-2025 09:21:51 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.0.0 OK  1740990110 5b1f17b1804b1-43b8d6bc3fcsm121881975e9.0 - gsmtp
+
+[03-Mar-2025 09:21:51 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RSET
+
+[03-Mar-2025 09:21:51 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 Flushed 5b1f17b1804b1-43b8d6bc3fcsm121881975e9.0 - gsmtp
+
+[03-Mar-2025 09:21:51 Europe/Berlin] Email sent successfully
+[03-Mar-2025 09:21:51 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: QUIT
+
+[03-Mar-2025 09:21:51 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 221 2.0.0 closing connection 5b1f17b1804b1-43b8d6bc3fcsm121881975e9.0 - gsmtp
+
+[03-Mar-2025 09:21:51 Europe/Berlin] Email sent successfully
+[03-Mar-2025 09:22:50 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 09:22:50 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 09:22:50 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 09:22:50 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 09:22:50 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"207935","login":""}
+[03-Mar-2025 13:13:07 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 13:13:07 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 13:13:07 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 13:13:07 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 13:13:23 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 13:13:23 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 13:13:23 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 13:13:23 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 13:13:23 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"","verify":"1"}
+[03-Mar-2025 13:13:23 Europe/Berlin] Verifying credentials for username: Elias Cheruiyot
+[03-Mar-2025 13:13:23 Europe/Berlin] User found: yes
+[03-Mar-2025 13:13:24 Europe/Berlin] Attempting to send email to: eliascheruiyot9@gmail.com
+[03-Mar-2025 13:13:24 Europe/Berlin] Initializing mail send process
+[03-Mar-2025 13:13:24 Europe/Berlin] Target email: eliascheruiyot9@gmail.com
+[03-Mar-2025 13:13:24 Europe/Berlin] SMTP Username length: 28
+[03-Mar-2025 13:13:24 Europe/Berlin] SMTP Password length: 19
+[03-Mar-2025 13:13:24 Europe/Berlin] Attempting to send email...
+[03-Mar-2025 13:13:26 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP a640c23a62f3a-abf73dbaeaesm230508666b.160 - gsmtp
+
+[03-Mar-2025 13:13:26 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[03-Mar-2025 13:13:26 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.72.195.70]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[03-Mar-2025 13:13:26 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: STARTTLS
+
+[03-Mar-2025 13:13:26 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.72.195.70]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: AUTH LOGIN
+
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[03-Mar-2025 13:13:27 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MAIL FROM:<hominidphotography@gmail.com>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.0 OK a640c23a62f3a-abf73dbaeaesm230508666b.160 - gsmtp
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RCPT TO:<eliascheruiyot9@gmail.com>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 OK a640c23a62f3a-abf73dbaeaesm230508666b.160 - gsmtp
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: DATA
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 354 Go ahead a640c23a62f3a-abf73dbaeaesm230508666b.160 - gsmtp
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Date: Mon, 3 Mar 2025 13:13:24 +0100
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: To: eliascheruiyot9@gmail.com
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: From: Sian Medical <hominidphotography@gmail.com>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Subject: Login Verification Code - Sian Medical
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Message-ID: <WP4wuo7x2DFx5hjmZXJpZRtVYISAsJ79ddkSuHU7g@localhost>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MIME-Version: 1.0
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:  boundary="b1=_WP4wuo7x2DFx5hjmZXJpZRtVYISAsJ79ddkSuHU7g"
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_WP4wuo7x2DFx5hjmZXJpZRtVYISAsJ79ddkSuHU7g
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Your verification code is: 485157
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_WP4wuo7x2DFx5hjmZXJpZRtVYISAsJ79ddkSuHU7g
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <h2 style='color: #2c614f; margin-bottom: 20px;'>Login Verification</h2>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Hello Elias Cheruiyot,</p>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Your verification code for Sian Medical login is:</p>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <div style='background-color: #f5f5f5; padding: 15px; text-align: center; margin: 20px 0;'>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                     <h1 style='color: #2c614f; letter-spacing: 5px; margin: 0;'>485157</h1>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 </div>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>This code will expire in 5 minutes.</p>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p style='color: #666; font-size: 0.9em;'>If you didn't request this code, please ignore this email.</p>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             </div>
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:         
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_WP4wuo7x2DFx5hjmZXJpZRtVYISAsJ79ddkSuHU7g--
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 13:13:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: .
+
+[03-Mar-2025 13:13:29 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.0.0 OK  1741004009 a640c23a62f3a-abf73dbaeaesm230508666b.160 - gsmtp
+
+[03-Mar-2025 13:13:29 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RSET
+
+[03-Mar-2025 13:13:29 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 Flushed a640c23a62f3a-abf73dbaeaesm230508666b.160 - gsmtp
+
+[03-Mar-2025 13:13:29 Europe/Berlin] Email sent successfully
+[03-Mar-2025 13:13:29 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: QUIT
+
+[03-Mar-2025 13:13:29 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 221 2.0.0 closing connection a640c23a62f3a-abf73dbaeaesm230508666b.160 - gsmtp
+
+[03-Mar-2025 13:13:29 Europe/Berlin] Email sent successfully
+[03-Mar-2025 13:13:52 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 13:13:52 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 13:13:52 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 13:13:52 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 13:13:52 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"485157","login":""}
+[03-Mar-2025 17:48:11 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 17:48:11 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 17:48:11 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 17:48:11 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 17:48:19 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 17:48:19 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 17:48:19 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 17:48:19 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 17:48:19 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"","verify":"1"}
+[03-Mar-2025 17:48:19 Europe/Berlin] Verifying credentials for username: Elias Cheruiyot
+[03-Mar-2025 17:48:19 Europe/Berlin] User found: yes
+[03-Mar-2025 17:48:19 Europe/Berlin] Attempting to send email to: eliascheruiyot9@gmail.com
+[03-Mar-2025 17:48:19 Europe/Berlin] Initializing mail send process
+[03-Mar-2025 17:48:19 Europe/Berlin] Target email: eliascheruiyot9@gmail.com
+[03-Mar-2025 17:48:19 Europe/Berlin] SMTP Username length: 28
+[03-Mar-2025 17:48:19 Europe/Berlin] SMTP Password length: 19
+[03-Mar-2025 17:48:19 Europe/Berlin] Attempting to send email...
+[03-Mar-2025 17:48:19 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP ffacd0b85a97d-390e485df22sm15218119f8f.97 - gsmtp
+
+[03-Mar-2025 17:48:19 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[03-Mar-2025 17:48:19 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.90.177.184]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[03-Mar-2025 17:48:19 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: STARTTLS
+
+[03-Mar-2025 17:48:20 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[03-Mar-2025 17:48:20 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.90.177.184]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: AUTH LOGIN
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MAIL FROM:<hominidphotography@gmail.com>
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.0 OK ffacd0b85a97d-390e485df22sm15218119f8f.97 - gsmtp
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RCPT TO:<eliascheruiyot9@gmail.com>
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 OK ffacd0b85a97d-390e485df22sm15218119f8f.97 - gsmtp
+
+[03-Mar-2025 17:48:21 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: DATA
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 354 Go ahead ffacd0b85a97d-390e485df22sm15218119f8f.97 - gsmtp
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Date: Mon, 3 Mar 2025 17:48:19 +0100
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: To: eliascheruiyot9@gmail.com
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: From: Sian Medical <hominidphotography@gmail.com>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Subject: Login Verification Code - Sian Medical
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Message-ID: <c32Wg6cHxTJbsXTeG3ILXvajrbgIXasbeSJf34lqkiI@localhost>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MIME-Version: 1.0
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:  boundary="b1=_c32Wg6cHxTJbsXTeG3ILXvajrbgIXasbeSJf34lqkiI"
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_c32Wg6cHxTJbsXTeG3ILXvajrbgIXasbeSJf34lqkiI
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Your verification code is: 362872
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_c32Wg6cHxTJbsXTeG3ILXvajrbgIXasbeSJf34lqkiI
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <h2 style='color: #2c614f; margin-bottom: 20px;'>Login Verification</h2>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Hello Elias Cheruiyot,</p>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Your verification code for Sian Medical login is:</p>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <div style='background-color: #f5f5f5; padding: 15px; text-align: center; margin: 20px 0;'>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                     <h1 style='color: #2c614f; letter-spacing: 5px; margin: 0;'>362872</h1>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 </div>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>This code will expire in 5 minutes.</p>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p style='color: #666; font-size: 0.9em;'>If you didn't request this code, please ignore this email.</p>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             </div>
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:         
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_c32Wg6cHxTJbsXTeG3ILXvajrbgIXasbeSJf34lqkiI--
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:48:22 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: .
+
+[03-Mar-2025 17:48:23 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.0.0 OK  1741020502 ffacd0b85a97d-390e485df22sm15218119f8f.97 - gsmtp
+
+[03-Mar-2025 17:48:23 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RSET
+
+[03-Mar-2025 17:48:23 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 Flushed ffacd0b85a97d-390e485df22sm15218119f8f.97 - gsmtp
+
+[03-Mar-2025 17:48:23 Europe/Berlin] Email sent successfully
+[03-Mar-2025 17:48:23 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: QUIT
+
+[03-Mar-2025 17:48:23 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 221 2.0.0 closing connection ffacd0b85a97d-390e485df22sm15218119f8f.97 - gsmtp
+
+[03-Mar-2025 17:48:23 Europe/Berlin] Email sent successfully
+[03-Mar-2025 17:48:52 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 17:48:52 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 17:48:52 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 17:48:52 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 17:48:52 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"362872","login":""}
+[03-Mar-2025 17:58:52 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 17:58:52 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 17:58:52 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 17:58:52 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 17:59:26 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 17:59:26 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 17:59:26 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 17:59:26 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 17:59:26 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"","verify":"1"}
+[03-Mar-2025 17:59:26 Europe/Berlin] Verifying credentials for username: Elias Cheruiyot
+[03-Mar-2025 17:59:26 Europe/Berlin] User found: yes
+[03-Mar-2025 17:59:27 Europe/Berlin] Attempting to send email to: eliascheruiyot9@gmail.com
+[03-Mar-2025 17:59:27 Europe/Berlin] Initializing mail send process
+[03-Mar-2025 17:59:27 Europe/Berlin] Target email: eliascheruiyot9@gmail.com
+[03-Mar-2025 17:59:27 Europe/Berlin] SMTP Username length: 28
+[03-Mar-2025 17:59:27 Europe/Berlin] SMTP Password length: 19
+[03-Mar-2025 17:59:27 Europe/Berlin] Attempting to send email...
+[03-Mar-2025 17:59:27 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 smtp.gmail.com ESMTP 5b1f17b1804b1-43bbbff18b3sm57604235e9.24 - gsmtp
+
+[03-Mar-2025 17:59:27 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[03-Mar-2025 17:59:28 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.90.177.184]
+250-SIZE 35882577
+250-8BITMIME
+250-STARTTLS
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[03-Mar-2025 17:59:28 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: STARTTLS
+
+[03-Mar-2025 17:59:28 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 220 2.0.0 Ready to start TLS
+
+[03-Mar-2025 17:59:29 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: EHLO localhost
+
+[03-Mar-2025 17:59:29 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250-smtp.gmail.com at your service, [41.90.177.184]
+250-SIZE 35882577
+250-8BITMIME
+250-AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH
+250-ENHANCEDSTATUSCODES
+250-PIPELINING
+250-CHUNKING
+250 SMTPUTF8
+
+[03-Mar-2025 17:59:29 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: AUTH LOGIN
+
+[03-Mar-2025 17:59:29 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 VXNlcm5hbWU6
+
+[03-Mar-2025 17:59:29 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[03-Mar-2025 17:59:29 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 334 UGFzc3dvcmQ6
+
+[03-Mar-2025 17:59:29 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: [credentials hidden]
+[03-Mar-2025 17:59:30 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 235 2.7.0 Accepted
+
+[03-Mar-2025 17:59:30 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MAIL FROM:<hominidphotography@gmail.com>
+
+[03-Mar-2025 17:59:30 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.0 OK 5b1f17b1804b1-43bbbff18b3sm57604235e9.24 - gsmtp
+
+[03-Mar-2025 17:59:30 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RCPT TO:<eliascheruiyot9@gmail.com>
+
+[03-Mar-2025 17:59:30 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 OK 5b1f17b1804b1-43bbbff18b3sm57604235e9.24 - gsmtp
+
+[03-Mar-2025 17:59:30 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: DATA
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 354 Go ahead 5b1f17b1804b1-43bbbff18b3sm57604235e9.24 - gsmtp
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Date: Mon, 3 Mar 2025 17:59:27 +0100
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: To: eliascheruiyot9@gmail.com
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: From: Sian Medical <hominidphotography@gmail.com>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Subject: Login Verification Code - Sian Medical
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Message-ID: <ils2ZtOoNz2lMVd0ERvU4uogTQufF3YiLupRtXiXCo@localhost>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: X-Mailer: PHPMailer 6.9.3 (https://github.com/PHPMailer/PHPMailer)
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: MIME-Version: 1.0
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: multipart/alternative;
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:  boundary="b1=_ils2ZtOoNz2lMVd0ERvU4uogTQufF3YiLupRtXiXCo"
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Transfer-Encoding: 8bit
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_ils2ZtOoNz2lMVd0ERvU4uogTQufF3YiLupRtXiXCo
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/plain; charset=us-ascii
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Your verification code is: 589744
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_ils2ZtOoNz2lMVd0ERvU4uogTQufF3YiLupRtXiXCo
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: Content-Type: text/html; charset=us-ascii
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <h2 style='color: #2c614f; margin-bottom: 20px;'>Login Verification</h2>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Hello Elias Cheruiyot,</p>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>Your verification code for Sian Medical login is:</p>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <div style='background-color: #f5f5f5; padding: 15px; text-align: center; margin: 20px 0;'>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                     <h1 style='color: #2c614f; letter-spacing: 5px; margin: 0;'>589744</h1>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 </div>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p>This code will expire in 5 minutes.</p>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:                 <p style='color: #666; font-size: 0.9em;'>If you didn't request this code, please ignore this email.</p>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:             </div>
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER:         
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: --b1=_ils2ZtOoNz2lMVd0ERvU4uogTQufF3YiLupRtXiXCo--
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: 
+
+[03-Mar-2025 17:59:31 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: .
+
+[03-Mar-2025 17:59:32 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.0.0 OK  1741021171 5b1f17b1804b1-43bbbff18b3sm57604235e9.24 - gsmtp
+
+[03-Mar-2025 17:59:32 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: RSET
+
+[03-Mar-2025 17:59:32 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 250 2.1.5 Flushed 5b1f17b1804b1-43bbbff18b3sm57604235e9.24 - gsmtp
+
+[03-Mar-2025 17:59:32 Europe/Berlin] Email sent successfully
+[03-Mar-2025 17:59:32 Europe/Berlin] SMTP Debug: CLIENT -> SERVER: QUIT
+
+[03-Mar-2025 17:59:32 Europe/Berlin] SMTP Debug: SERVER -> CLIENT: 221 2.0.0 closing connection 5b1f17b1804b1-43bbbff18b3sm57604235e9.24 - gsmtp
+
+[03-Mar-2025 17:59:32 Europe/Berlin] Email sent successfully
+[03-Mar-2025 18:00:34 Europe/Berlin] Testing email configuration...
+[03-Mar-2025 18:00:34 Europe/Berlin] MAIL_USERNAME is empty
+[03-Mar-2025 18:00:34 Europe/Berlin] MAIL_PASSWORD is empty
+[03-Mar-2025 18:00:34 Europe/Berlin] MAIL_FROM_NAME is empty
+[03-Mar-2025 18:00:34 Europe/Berlin] POST request received: {"username":"Elias Cheruiyot","password":"123456","verification_code":"589744","login":""}
